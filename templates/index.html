@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth - Home</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   
+    <script type="text/javascript" src="//platform.linkedin.com/in.js">
+        api_key: 81xjeov8i1c3qj
+        authorize: true
+        onLoad: onLinkedInLoad
+        scope: r_basicprofile r_emailaddress
+    </script>
+
+    <script type="text/javascript">
+        //using this method load into LinkedIn
+        function onLinkedInLoad() {
+            IN.Event.on(IN, "auth", detailsOfclient);
+        }
+        //LinkedIn profile data requesting
+        function detailsOfclient() {
+            IN.API.Profile("me").fields("id", "first-name",
+                "last-name", "headline", "location", "picture-url",
+                "public-profile-url", "email-address").result(dataviewfrontsite).error(detection);
+        }
+
+        //View data in the front page
+        function dataviewfrontsite(data) {
+            var author = data.values[0];
+            document.getElementById("images").innerHTML = '<img src="' + author.pictureUrl + '" />';
+            document.getElementById("allnames").innerHTML = author.firstName + ' ' + author.lastName;
+            document.getElementById("description").innerHTML = author.headline;
+            // document.getElementById("email").innerHTML = author.emailAddress;
+            // document.getElementById("places").innerHTML = author.location.name;
+            // document.getElementById("site").innerHTML = '<a href="' + author.publicProfileUrl + '" target="_blank">Visit profile</a>';
+            document.getElementById('account').style.display = 'block';
+            // document.getElementById('details').style.display = 'none';
+            storedata(author);
+
+        }
+
+        function detection(error) {
+            console.log(error);
+        }
+
+        //account logout
+        function logout() {
+            IN.User.logout(cleardata);
+            document.getElementById('details').style.display = 'block';
+        }
+        //clearing data
+        function cleardata() {
+            document.getElementById('account').remove();
+        }
+
+        //store data
+        function storedata(user) {
+            console.log("save successful" + user.firstName);
+        }
+
+    </script>
+</head>
+
+<body style="background-color:#222223;">
+
+    <!-- directing from login button -->
+    <div  id="details">
+        <div align="center" style="padding: 20px;background-color: #fff; opacity: 0.7;">
+            <script type="In/Login"></script>
+        </div>
+        <center style="color:#fff;">
+            <h1>WELCOME TO LINkED IN OAuth TESTING WEBSITE </h1>
+            <h2>Name : H.G.S.Premadasa </h2>
+            <h2>Student ID : IT15142610 </h2>
+        </center>
+    </div>
+    <!--all data loading using this section-->
+    <div class="designing" id="account" style="display: none;" align="center" >
+        <div class="form">
+            <form style="color: #fff;" >
+                <div id="images"></div>
+                <br>
+                <div class="info">
+                    <h1 id="allnames"></h1>
+                    <h2 id="description"></h2>
+                    <p>Share the video on your LinkedIn wall<br>
+                        <script src="http://platform.linkedin.com/in.js" type="text/javascript"> lang: en_US</script>
+                        <script type="IN/Share" data-url="https://www.youtube.com/watch?v=13WGrNVEBbI"></script>
+                    </p>
+                </div>
+                <br>
+                <p>
+                    <a class="btn btn-primary" data-toggle="collapse" role="button" aria-expanded="false"
+                    aria-controls="collapseExample" href="javascript:void(0);" onclick="logout()">Logout</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
